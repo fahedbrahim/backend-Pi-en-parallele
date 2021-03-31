@@ -44,13 +44,14 @@ router.post("/login", async (req, res) => {
   const user = await userModel.findOne({ email });
 
   if (!user) {
-    return res.send("vous n'etes pas enregistrer");
+     //return res.send("vous n'etes pas enregistrer");
+    return res.status(203).send("vous n'etes pas enregistrer")
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.send("mot de passe incorrecte");
+    return res.status(203).send("mot de passe incorrecte");
   }
   req.session.user = user;
   req.session.isAuth = true;
@@ -65,7 +66,7 @@ router.get("/dashboard", verifAuth, (req, res) => {
   res.send("vous etes le bienvenue sur dashboard " + req.session.compteur);
 });
 
-router.post("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) throw err;
     user = { role: "visiteur" };
