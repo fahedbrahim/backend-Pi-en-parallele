@@ -21,13 +21,20 @@ const userSchema = new Schema({
         type : String,
         required : true
     },
-    adresse : {
+    adress : {
+      type : String,
+      required : true
+    },
+    phone : {
       type : String,
       required : true
     },
     role : {
       type : String,
       require : true
+    },
+    id_company : {
+      type : String,
     }
 
     // role , date create , adresse 
