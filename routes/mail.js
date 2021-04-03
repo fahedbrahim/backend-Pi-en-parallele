@@ -31,31 +31,9 @@ const mail = (data)=>{
 
 router.get("/",  (req, res) => {
 
-/*let transporter = nodemailer.createTransport({
-    service : 'gmail',
-    auth : {
-        user : process.env.MAILADRESS,
-        pass : process.env.PASSMAIL
-    }
-})
-
-let mailOptions = {
-    from : 'wecodeesprit@gmail.com',
-    to: 'fahed.brahim@esprit.tn',
-    subject : 'test',
-    text: 'test 1'
-}
-
-transporter.sendMail(mailOptions, (err, data)=>{
-    if (err){
-        console.log('error')
-    }else{
-        console.log('email sent !!!')
-    }
-})*/
 
 mail(req.body)
-res.send('ok')
+res.send('email sent')
 })
 
 module.exports = router;

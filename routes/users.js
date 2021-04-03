@@ -17,4 +17,24 @@ router.get('/' ,verifAuth , async (req, res) => {
   res.send(users);
 });
 
+router.get('/:id' ,verifAuth , async (req, res) => {
+  var user = await userModel.findById(req.params.id)
+  res.send(user);
+});
+
+router.put('/:id' ,verifAuth , async (req, res) => {
+  var user = await userModel.findByIdAndUpdate(req.params.id, req.body,{}) 
+  res.send(user);
+});
+
+router.delete('/:id' ,verifAuth , async (req, res) => {
+  var user = await userModel.findById(req.params.id)
+  user.remove();
+});
+
+router.post('/adduser',verifAuth, async (req,res)=>{
+
+});
+
+
 module.exports = router;

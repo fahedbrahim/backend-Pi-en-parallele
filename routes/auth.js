@@ -12,7 +12,7 @@ const verifAuth = (req, res, next) => {
 };
 
 router.post("/register", async (req, res) => {
-  const { username, email, password, adresse, role } = req.body;
+  const { username, email, password, adresse, phone, role,id_company } = req.body;
 
   var user = await userModel.findOne({ email });
 
@@ -26,7 +26,9 @@ router.post("/register", async (req, res) => {
     email,
     password: hashedPsw,
     adresse,
+    phone,
     role,
+    id_company
   });
 
   await user.save();
@@ -35,7 +37,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  res.json("welcome in home you must login for enter");
+  res.json("you must login for enter");
 });
 
 router.post("/login", async (req, res) => {
@@ -53,7 +55,7 @@ router.post("/login", async (req, res) => {
   if (!isMatch) {
     return res.status(203).send("mot de passe incorrecte");
   }
-  req.session.user = user;
+  req.session.user = {username : user.username, email: user.email, adresse: user.adresse, phone : user.phone, role: user.role, id_company: user.id_company};
   req.session.isAuth = true;
   req.session.compteur = 0;
   //res.redirect('/dashboard')
@@ -61,10 +63,6 @@ router.post("/login", async (req, res) => {
   res.send(req.session.user);
 });
 
-router.get("/dashboard", verifAuth, (req, res) => {
-  req.session.compteur += 1;
-  res.send("vous etes le bienvenue sur dashboard " + req.session.compteur);
-});
 
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {

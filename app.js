@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const expressListRoutes = require('express-list-routes');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -44,7 +45,8 @@ app.use(session({
   resave : false,
   saveUninitialized : false,
   cookie : {
-      maxAge : 60000
+      maxAge : 60000,
+      httpOnly: false,
   },
   store : store
 }))
@@ -70,4 +72,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+expressListRoutes(app, { prefix: '' });
 module.exports = app;
