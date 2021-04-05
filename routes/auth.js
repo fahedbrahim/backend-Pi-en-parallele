@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
   if (!isMatch) {
     return res.status(203).send("mot de passe incorrecte");
   }
-  req.session.user = {username : user.username, email: user.email, adresse: user.adresse, phone : user.phone, role: user.role, id_company: user.id_company};
+  req.session.user = {id: user._id ,username : user.username, email: user.email, adresse: user.adresse, phone : user.phone, role: user.role, id_company: user.id_company};
   req.session.isAuth = true;
   req.session.compteur = 0;
   //res.redirect('/dashboard')
