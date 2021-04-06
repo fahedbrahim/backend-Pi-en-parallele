@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  res.json("you must login for enter");
+  res.status(203).send("you must login for enter");
 });
 
 router.post("/login", async (req, res) => {

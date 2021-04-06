@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var nodemailer = require('nodemailer')
-
+const userModel = require("../models/user");
 
 const mail = (data)=>{
 
@@ -17,7 +17,7 @@ const mail = (data)=>{
         from : process.env.MAILADRESS,
         to: data.email,
         subject : data.emailsend,
-        text: data.message
+        text: data.message + data.subject
     }
 
     transporter.sendMail(mailOptions, (err, data)=>{
@@ -29,11 +29,19 @@ const mail = (data)=>{
     })
 }
 
-router.get("/",  (req, res) => {
+router.get("/", async (req, res) => {
+    const { email, emailsend, subject ,message } = req.body;
+    const user = await userModel.findOne({ email });
 
+    if (!user) {
+        //return res.send("vous n'etes pas enregistrer");
+       return res.status(203).send("vous n'etes pas enregistrer")
+     }
+     else {
+        mail(req.body)
+        res.send('email sent')
+     }
 
-mail(req.body)
-res.send('email sent')
 })
 
 module.exports = router;
