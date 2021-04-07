@@ -12,12 +12,15 @@ const verifAuth = (req, res, next) => {
 };
 
 router.post("/register", async (req, res) => {
+
+
   const { username, email, password, adresse, phone, role,id_company } = req.body;
+
 
   var user = await userModel.findOne({ email });
 
   if (user) {
-    return res.send("il existe deja");
+    return res.status(203).send("il existe deja");
   }
   const hashedPsw = await bcrypt.hash(password, 12);
 
@@ -30,10 +33,13 @@ router.post("/register", async (req, res) => {
     role,
     id_company
   });
+  try{
+    await user.save();
+    res.send("user enregistrer ");
 
-  await user.save();
-
-  res.send("user enregistrer ");
+  }catch(err){
+    res.status(203).send(err.message)
+  }
 });
 
 router.get("/", async (req, res) => {
@@ -41,6 +47,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  
   const { email, password } = req.body;
 
   const user = await userModel.findOne({ email });

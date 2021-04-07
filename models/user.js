@@ -4,12 +4,16 @@ const Schema = mongoose.Schema
 const userSchema = new Schema({
     username : {
         type : String,
-        required : true
+        required : [true, "Username required"]
     },
     email : {
         type : String,
-        required : true, /*required: [true, "Please add an email"],*/
-        unique : true 
+        required : [true, "Please add an email"], /*required: [true, "Please add an email"],*/
+        unique : true,
+        match: [
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          "Please add a valid email",
+        ],
         /*match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please add a valid email",
@@ -19,19 +23,20 @@ const userSchema = new Schema({
     },
     password : {
         type : String,
-        required : true
+        required : [true, 'Password required']
     },
     adresse : {
       type : String,
-      required : true
+      required : [true, 'Address required']
     },
     phone : {
       type : String,
-      required : true
+      required : [true, 'Phone number required']
     },
     role : {
       type : String,
-      require : true
+      require : [true, 'unidentified role'],
+      enum: ['admin', 'user', 'company']
     },
     id_company : {
       type : String,
