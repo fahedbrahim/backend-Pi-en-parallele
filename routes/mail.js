@@ -15,9 +15,9 @@ const mail = (data)=>{
 
     let mailOptions = {
         from : process.env.MAILADRESS,
-        to: data.email,
+        to: data.emailsend,
         subject : data.emailsend,
-        text: data.message + data.subject
+        html: "<h4>hello welcome</h4>"
     }
 
     transporter.sendMail(mailOptions, (err, data)=>{
@@ -31,7 +31,7 @@ const mail = (data)=>{
 
 router.get("/", async (req, res) => {
     const { email, emailsend, subject ,message } = req.body;
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email: emailsend });
 
     if (!user) {
         //return res.send("vous n'etes pas enregistrer");

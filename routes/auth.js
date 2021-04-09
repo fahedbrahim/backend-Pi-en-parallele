@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+var nodemailer = require('nodemailer')
 const userModel = require("../models/user");
 
 const verifAuth = (req, res, next) => {
@@ -78,5 +80,63 @@ router.get("/logout", (req, res) => {
     res.send(user);
   });
 });
+
+router.post("/reset-password",(req,res)=>{
+  crypto.randomBytes(32,(err,buffer)=>{
+    if(err){
+      console.log(err)
+    }
+    const token = buffer.toString("hex")
+    userModel.findOne({email : req.body.email}).then(user=>{
+      if(!user){
+        return res.status(203).send("user dont exists with that email")
+      }
+      user.resetToken = token
+      user.expireToken = Date.now() + 60000
+      user.save().then(result=>{
+        let transporter = nodemailer.createTransport({
+          service : 'gmail',
+          auth : {
+              user : process.env.MAILADRESS,
+              pass : process.env.PASSMAIL
+          }
+      })
+  
+        transporter.sendMail({
+          to : user.email,
+          from : process.env.MAILADRESS,
+          subject : "Password reset",
+          html : `
+          <p>You request for password reset</p>
+          <h5>Click in this <a href="${process.env.URLCORS}/newpassword/${token}">link</a> to reset password</h5>
+          `
+        })
+        res.send("check your email")
+      })
+    })
+  })
+});
+
+
+router.post('/new-password',(req,res)=>{
+
+    const newPassword = req.body.password
+    const sentToken = req.body.token
+    userModel.findOne({resetToken:sentToken,expireToken:{$gt:Date.now()}}).then(user=>{
+      if(!user){
+        return res.status(203).send("Try again session expired")
+    }
+
+    bcrypt.hash(newPassword,12).then(hashedpassword=>{
+           user.password = hashedpassword
+           user.resetToken = undefined
+           user.expireToken = undefined
+           user.save().then((saveduser)=>{
+            return res.send("password updated success")
+           })
+    })
+    })
+})
+
 
 module.exports = router;

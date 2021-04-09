@@ -36,12 +36,18 @@ const userSchema = new Schema({
     role : {
       type : String,
       require : [true, 'unidentified role'],
-      enum: ['admin', 'user', 'company']
+      enum: ['admin', 'user', 'company', 'deliveryMan']
     },
     id_company : {
       type : String,
-    }
+    },
 
+    resetToken : {
+      type : String
+    },
+    expireToken :{
+      type: Date
+    } 
     // role , date create , adresse 
     /*userId: {
     type: mongoose.Schema.Types.ObjectId,
