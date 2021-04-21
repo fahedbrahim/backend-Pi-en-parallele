@@ -12,9 +12,11 @@ const MongoDBSession = require('connect-mongodb-session')(session)
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var mailRouter = require('./routes/mail');
+var geoRouter = require('./routes/fahed/geoPoints');
+var usersRouter = require('./routes/fahed/users');
+var companiesWaitRouter = require('./routes/fahed/companiesWait');
 
 var app = express();
 
@@ -45,7 +47,7 @@ app.use(session({
   resave : false,
   saveUninitialized : false,
   cookie : {
-      maxAge : 30 * 60000,
+      maxAge : 30*60000,
       httpOnly: false,
   },
   store : store
@@ -53,8 +55,10 @@ app.use(session({
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/compwait', companiesWaitRouter);
 app.use('/auth', authRouter);
 app.use('/mail', mailRouter);
+app.use('/geo', geoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

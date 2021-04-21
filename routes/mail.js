@@ -15,32 +15,35 @@ const mail = (data)=>{
 
     let mailOptions = {
         from : process.env.MAILADRESS,
-        to: data.emailsend,
+        to: data.email,
         subject : data.emailsend,
-        html: "<h4>hello welcome</h4>"
+        html: `
+        Subject : <h3>${data.subject}</h3><hr/>
+        Message : <p>${data.message}</p>
+        `
     }
 
     transporter.sendMail(mailOptions, (err, data)=>{
         if (err){
-            console.log('error')
-        }else{
-            console.log('email sent !!!')
-        }
+            res.status(203).send('error')}
+        // }else{
+        //     console.log('email sent !!!')
+        // }
     })
 }
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
     const { email, emailsend, subject ,message } = req.body;
-    const user = await userModel.findOne({ email: emailsend });
+    //const user = await userModel.findOne({ email: emailsend });
 
-    if (!user) {
-        //return res.send("vous n'etes pas enregistrer");
-       return res.status(203).send("vous n'etes pas enregistrer")
-     }
-     else {
+    // if (!user) {
+    //     //return res.send("vous n'etes pas enregistrer");
+    //    return res.status(203).send("vous n'etes pas enregistrer")
+    //  }
+    //  else {
         mail(req.body)
         res.send('email sent')
-     }
+     //}
 
 })
 

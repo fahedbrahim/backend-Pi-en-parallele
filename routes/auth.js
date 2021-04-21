@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 var nodemailer = require('nodemailer')
 const userModel = require("../models/user");
+const compwaitModel = require("../models/compwaiting");
 
 const verifAuth = (req, res, next) => {
   if (req.session.isAuth) {
@@ -20,12 +21,13 @@ router.post("/register", async (req, res) => {
 
 
   var user = await userModel.findOne({ email });
+  var comp = await compwaitModel.findOne({ email });
 
-  if (user) {
+  if (user || comp) {
     return res.status(203).send("il existe deja");
   }
   const hashedPsw = await bcrypt.hash(password, 12);
-
+if (role === 'user' || role === 'deliveryMan'){
   user = new userModel({
     username,
     email,
@@ -37,11 +39,49 @@ router.post("/register", async (req, res) => {
   });
   try{
     await user.save();
-    res.send("user enregistrer ");
+    res.send("user saved ");
 
   }catch(err){
     res.status(203).send(err.message)
   }
+}
+
+if(role === 'company'){
+  company = new compwaitModel({
+    username,
+    email,
+    password: hashedPsw,
+    adresse,
+    phone,
+    role,
+    id_company
+  });
+  try{
+    await company.save().then(result=>{
+      let transporter = nodemailer.createTransport({
+        service : 'gmail',
+        auth : {
+            user : process.env.MAILADRESS,
+            pass : process.env.PASSMAIL
+        }
+    })
+
+      transporter.sendMail({
+        to : company.email,
+        from : process.env.MAILADRESS,
+        subject : "Account being processed",
+        html : `
+        <p>Thank you for joining our platform.</p>
+        <h4>Your account is being processed for the moment, an email will be communicated to you upon acceptance</h4>
+        `
+      })
+      res.send("your account is being processed, check your email")
+    })
+    
+  }catch(err){
+    res.status(203).send(err.message)
+  }
+}
 });
 
 router.get("/", async (req, res) => {
