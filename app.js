@@ -36,7 +36,7 @@ mongoose.connect(process.env.URLMONGO , {
   useCreateIndex : true,
   useUnifiedTopology : true
 }).then(res =>console.log('je suis connecter avec mongo'))
-
+mongoose.set('useFindAndModify', false);
 const store = new MongoDBSession({
   uri : process.env.URLMONGO,
   collection : 'mySession'
