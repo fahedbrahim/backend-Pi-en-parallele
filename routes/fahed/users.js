@@ -56,6 +56,11 @@ router.put('/profile/:id' ,verifAuth , async (req, res) => {
 });
 
 router.put('/:id' ,verifAuth , async (req, res) => {
+  
+  var user = await userModel.findOne({ email: req.body.email });
+  if (user) {
+    return res.status(203).send("Email exist");
+  }
   var user = await userModel.findByIdAndUpdate(req.params.id, req.body,{}) 
   var user = await userModel.findById(req.params.id)
   res.send(user);
