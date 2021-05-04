@@ -53,6 +53,7 @@ const verifAuth = (req, res, next)=>{
       adresse,
       phone,
       role,
+      date : Date.now(),
       id_company
     });
     try{

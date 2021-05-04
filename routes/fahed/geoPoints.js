@@ -60,7 +60,8 @@ router.post('/',async (req, res)=>{
         destinations : req.body.items,
         start : req.body.start,
         waypoints : order,
-        iduser : req.body.idcreator
+        iduser : req.body.idcreator,
+        date : new Date()
       });
       console.log(circuit)
       await circuit.save()

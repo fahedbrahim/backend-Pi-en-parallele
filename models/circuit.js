@@ -29,7 +29,10 @@ const circuitSchema = new Schema({
     iduser:{
         type : String,
         required : [true, 'User creator required'],
-    }
+    },
+    date : {
+      type : Date
+    },
     
 })
 

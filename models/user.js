@@ -38,6 +38,9 @@ const userSchema = new Schema({
       require : [true, 'unidentified role'],
       enum: ['admin', 'user', 'company', 'deliveryMan']
     },
+    date : {
+      type : Date
+    },
     id_company : {
       type : String,
     },

@@ -35,6 +35,7 @@ if (role === 'user' || role === 'deliveryMan'){
     adresse,
     phone,
     role,
+    date : Date.now(),
     id_company
   });
   try{
@@ -54,6 +55,7 @@ if(role === 'company'){
     adresse,
     phone,
     role,
+    date : Date.now(),
     id_company
   });
   try{
