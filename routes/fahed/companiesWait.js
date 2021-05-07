@@ -1,8 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var nodemailer = require('nodemailer')
+var {google} = require('googleapis')
 const compwaitModel = require('../../models/compwaiting')
 const userModel = require('../../models/user')
+
+const CLIENT_ID = '888983214216-0eidl17pv0gsogdhoaa1goagp08ashjr.apps.googleusercontent.com'
+const CLIENT_SECRET = 'YtybFzMFMCzmWsXMOXLpqnuq'
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN = '1//04dYn748hrjdhCgYIARAAGAQSNwF-L9Ir5_VR58NZ6U8It82O9nrCENGVVLsX7vYO47cXwhr4L3WWaRzOUVV9hhgusszDPbSPJwk'
+
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
+
+const accessToken = oAuth2Client.getAccessToken()
 
 const verifAuth = (req, res, next)=>{
     if(req.session.isAuth){
@@ -24,9 +35,14 @@ const verifAuth = (req, res, next)=>{
         let transporter = nodemailer.createTransport({
           service : 'gmail',
           auth : {
-              user : process.env.MAILADRESS,
-              pass : process.env.PASSMAIL
-          }
+            type : 'OAuth2',
+            user : "wecodeesprit@gmail.com",
+            clientId : CLIENT_ID,
+            clientSecret : CLIENT_SECRET,
+            refreshToken : REFRESH_TOKEN,
+            accessToken : accessToken,
+            pass : "wecode1234"
+        }
       })
   
         transporter.sendMail({
@@ -61,9 +77,14 @@ const verifAuth = (req, res, next)=>{
         let transporter = nodemailer.createTransport({
           service : 'gmail',
           auth : {
-              user : process.env.MAILADRESS,
-              pass : process.env.PASSMAIL
-          }
+            type : 'OAuth2',
+            user : "wecodeesprit@gmail.com",
+            clientId : CLIENT_ID,
+            clientSecret : CLIENT_SECRET,
+            refreshToken : REFRESH_TOKEN,
+            accessToken : accessToken,
+            pass : "wecode1234"
+        }
       })
   
         transporter.sendMail({
